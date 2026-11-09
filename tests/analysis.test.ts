@@ -33,10 +33,13 @@ describe("analyzeChart", () => {
   });
 
   it("produces a long plan with entry between stop and target on an uptrend", () => {
-    const { plan, indicators } = analyzeChart(baseInput);
+    const { plan, indicators, lastClose } = analyzeChart(baseInput);
     expect(indicators.trend).toBe("up");
     expect(plan.bias).toBe("long");
-    expect(plan.entry).toBeCloseTo(100, 6);
+    // With an entered high/low the entry is the mapped last close, inside that range.
+    expect(plan.entry).toBeCloseTo(lastClose, 10);
+    expect(plan.entry).toBeGreaterThan(80);
+    expect(plan.entry).toBeLessThan(120);
     expect(plan.stopLoss).toBeLessThan(plan.entry);
     expect(plan.takeProfit).toBeGreaterThan(plan.entry);
     expect(plan.riskReward).toBeCloseTo(2, 6);
