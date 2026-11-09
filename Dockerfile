@@ -1,5 +1,8 @@
 FROM node:26-alpine
-RUN apk upgrade --no-cache
+# Refresh base OS packages and force zlib onto the fixed release (ALPINE-CVE-2026-4738).
+RUN apk upgrade --no-cache \
+ && apk add --no-cache --upgrade 'zlib>=1.4-r0' \
+ && apk info -v zlib
 WORKDIR /app
 ENV NODE_ENV=production
 COPY package*.json ./
