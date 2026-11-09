@@ -174,6 +174,12 @@ export async function findUserByStripeCustomer(customerId: string): Promise<Stor
   return db.users.find((user) => user.stripeCustomerId === customerId) ?? null;
 }
 
+export async function findUserByStripeSubscription(subscriptionId: string): Promise<StoredUser | null> {
+  if (!subscriptionId) return null;
+  const db = await readDatabase();
+  return db.users.find((user) => user.subscription?.stripeSubscriptionId === subscriptionId) ?? null;
+}
+
 export async function updateUser(
   id: string,
   mutate: (user: StoredUser) => void,
